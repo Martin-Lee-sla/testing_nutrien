@@ -45,7 +45,7 @@ jobs:
         shell: pwsh
         run: |
           $User = $env:CLIENT_ID
-          $PWord = $env:CLIENT_SECRET
+          $PWord = ConvertTo-SecureString -String ($env:CLIENT_SECRET) -AsPlainText -Force
           $tenant = $env:TENANT_ID
           $Credential = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User,$PWord
           Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
