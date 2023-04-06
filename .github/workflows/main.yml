@@ -37,9 +37,9 @@ jobs:
       - name: connect to SPN
         shell: pwsh
         run: |
-          $User = ${{ secrets.client_id }}
-          $PWord = ${{ secrets.client_secret }}
-          $tenant = ${{ secrets.tenant_id }}
+          $User = ${{ secrets.CLIENT_ID }}
+          $PWord = ${{ secrets.CLIENT_SECRET }}
+          $tenant = ${{ secrets.TENANT_ID }}
           $Credential = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User,$PWord
           Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
       - name: Send Email
