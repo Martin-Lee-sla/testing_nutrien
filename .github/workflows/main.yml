@@ -29,6 +29,7 @@ jobs:
       - name: install communication services module
         shell: pwsh
         run: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           Install-Module Az.Communication
           #Import-Module Az.Communication
       - name: Send Email
