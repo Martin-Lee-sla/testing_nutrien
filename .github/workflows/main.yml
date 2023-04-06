@@ -36,8 +36,8 @@ jobs:
         shell: pwsh
         run: |
           az config set extension.use_dynamic_install=yes_without_prompt
-          Install-Module Az.Communication
-          Install-Module Az.ResourceGraph
+          Install-Module Az.Communication -Scope CurrentUser -Force
+          Install-Module Az.ResourceGraph -Scope CurrentUser -Force
       - name: connect to SPN
         shell: pwsh
         run: |
