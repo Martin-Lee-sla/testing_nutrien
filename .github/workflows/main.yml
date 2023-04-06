@@ -36,18 +36,19 @@ jobs:
         shell: pwsh
         run: |
           az config set extension.use_dynamic_install=yes_without_prompt
+          Install-Module Az -Scope CurrentUser -Force -AllowClobber
           Install-Module Az.Communication -Scope CurrentUser -Force -AllowClobber
-          Import-Module Az.Communication 
+          #Import-Module Az.Communication 
           Install-Module Az.ResourceGraph -Scope CurrentUser -Force -AllowClobber
-          Import-Module Az.ResourceGraph
+          #Import-Module Az.ResourceGraph
       - name: connect to SPN
         shell: pwsh
         run: |
           $User = $env:CLIENT_ID
           $PWord = $env:CLIENT_SECRET
           $tenant = $env:TENANT_ID
-          #$Credential = New-Object -ArgumentList $User,$PWord -TypeName "System.Management.Automation.PSCredential"
-          #Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
+          $Credential = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User,$PWord
+          Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
           az login --service-principal -u $User -p $PWord --tenant $tenant
       - name: query
         shell: pwsh
