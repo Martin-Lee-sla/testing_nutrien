@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule: 
-    - cron: "* 12 * * *"
+    - cron: "0 12 * * *"
 env:
   TENANT_ID: ${{ secrets.TENANT_ID }}
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
@@ -24,19 +24,14 @@ jobs:
       - run: npm help
 
   Run-PSScriptAnalyzer-on-Windows:
-    name: Run PSScriptAnalyzer on Windows
+    name: Run PSScript on Windows
     runs-on: windows-latest
     steps:
       - name: Install CLI
         shell: pwsh
         run: |
-          Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi
+          #Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi
           Write-Output "overall"
-      - name: Log in with Azure
-        uses: azure/login@v1
-        with:
-          creds: $env:AZURE_CREDENTIALS
-          enable-AzPSSession: true
       - name: install communication services module
         shell: pwsh
         run: |
@@ -49,8 +44,8 @@ jobs:
           $User = $env:CLIENT_ID
           $PWord = $env:CLIENT_SECRET
           $tenant = $env:TENANT_ID
-          #$Credential = New-Object -ArgumentList $User,$PWord -TypeName "System.Management.Automation.PSCredential"
-          #Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
+          $Credential = New-Object -ArgumentList $User,$PWord -TypeName "System.Management.Automation.PSCredential"
+          Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
           #az login --service-principal -u $User -p $PWord --tenant $tenant
       - name: Send Email
         shell: pwsh
@@ -61,5 +56,9 @@ jobs:
           $subject = "Welcome to Azure Communication Services Email"
           $text = "test"
           az communication email send --connection-string $connection --sender $sender --subject $subject --to $receiver --text "($text)"
-
+      - name: Log in with Azure
+        uses: azure/login@v1
+        with:
+          creds: $env:AZURE_CREDENTIALS
+          enable-AzPSSession: true
           
