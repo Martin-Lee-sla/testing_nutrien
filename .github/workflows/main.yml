@@ -6,7 +6,7 @@ on:
     branches: [ main ]
   schedule: 
     - cron: "* 12 * * *"
-
+  
 jobs:
   Run-npm-on-Ubuntu:
     name: Run npm on Ubuntu
@@ -34,6 +34,14 @@ jobs:
           az config set extension.use_dynamic_install=yes_without_prompt
           Install-Module Az.Communication
           #Import-Module Az.Communication
+      - name: connect to SPN
+        shell: pwsh
+        run: |
+          $User = ${{ secrets.client_id }}
+          $PWord = ConvertTo-SecureString -String (${{ secrets.client_secret }}) -AsPlainText -Force
+          $tenant = ${{ secrets.tenant_id }}
+          $Credential = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User,$PWord
+          Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
       - name: Send Email
         shell: pwsh
         run: |
