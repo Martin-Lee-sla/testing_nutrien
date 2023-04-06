@@ -30,7 +30,7 @@ jobs:
         shell: pwsh
         run: |
           Install-Module Az.Communication
-          Import-Module Az.Communication
+          #Import-Module Az.Communication
       - name: Send Email
         shell: pwsh
         run: |
