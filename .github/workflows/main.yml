@@ -1,49 +1,32 @@
-name: Run Commands on Azure VM
-
+name: Run commands on different operating systems
 on:
   push:
-    branches:
-      - main
-
-env:
-  AZURE_TENANT_ID: "9ca75128-a244-4596-877b-f24828e476e2"
-  AZURE_CLIENT_ID: "7838e1a3-ab2a-4f33-8a83-b52444a6ba89"
-  AZURE_CLIENT_SECRET: "kzw8Q~VxGmwVWmNHR4i5lvkNAaY-bRDD9YXsNdjz"
-  AZURE_SUBSCRIPTION_ID: "dac730c2-4027-48aa-b9ea-c423e0e228b4"
-  AZURE_RESOURCE_GROUP: rg-martin
-  AZURE_VM_PASSWORD: "P@55w.rd1234"
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  run-on-vm:
-    runs-on: windows-latest
-    
+  Run-npm-on-Ubuntu:
+    name: Run npm on Ubuntu
+    runs-on: ubuntu-latest
     steps:
-    - name: Set up Azure PowerShell
-      run: |
-        Install-Module -Name Az -Force
-        az login --service-principal --tenant $env:AZURE_TENANT_ID --client-id $env:AZURE_CLIENT_ID --client-secret $env:AZURE_CLIENT_SECRET --subscription $env:AZURE_SUBSCRIPTION_ID
-        
-    - name: Create Azure VM
-      run: |
-        az vm create `
-          --resource-group $env:AZURE_RESOURCE_GROUP `
-          --name MyVM `
-          --image Win2019Datacenter `
-          --admin-username azureuser `
-          --admin-password $env:AZURE_VM_PASSWORD `
-          --size Standard_D2s_v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: npm help
 
-    - name: Run Commands on VM
-      run: |
-        # Get public IP address of the VM
-        $ip = (az vm show --resource-group $env:AZURE_RESOURCE_GROUP --name MyVM --show-details --query 'publicIps' -o tsv)
-        # Run commands on the VM via PowerShell Remoting
-        Enter-PSSession -ComputerName $ip -Credential (Get-Credential azureuser) -Authentication Basic -Port 5986 -UseSSL -SessionOption (New-PSSessionOption -SkipCACheck -SkipCNCheck -SkipRevocationCheck) -ErrorAction Stop -Verbose -ScriptBlock { echo "Hello from Azure VM!" }
-
-    - name: Delete Azure VM
-      run: |
-        az vm delete `
-          --resource-group $env:AZURE_RESOURCE_GROUP `
-          --name MyVM `
-          --yes `
-          --no-wait
+  Run-PSScriptAnalyzer-on-Windows:
+    name: Run PSScriptAnalyzer on Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install PSScriptAnalyzer module
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi
+          Write-Output "overall"
+      - name: Get list of rules
+        shell: pwsh
+        run: |
+          Get-ScriptAnalyzerRule
