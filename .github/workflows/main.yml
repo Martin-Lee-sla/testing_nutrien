@@ -21,12 +21,24 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install PSScriptAnalyzer module
+      - name: Install CLI
         shell: pwsh
         run: |
           Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi
           Write-Output "overall"
-      - name: Get list of rules
+      - name: install communication services module
         shell: pwsh
         run: |
-          Get-ScriptAnalyzerRule
+          Install-Module Az.Communication
+          Import-Module Az.Communication
+      - name: Send Email
+        shell: pwsh
+        run: |
+          $connection = "endpoint=https://daily-report-demo.communication.azure.com/;accesskey=04LvQxrsosgOWMarfxjDhBt1rHXRGvQ7zBifqMuxiKWOifQh/wuWMrY/G/qCTZd1eeISzhJfybOkYcr3ju//+Q=="
+          $sender = "DoNotReply@ad2873a6-3d24-45e2-8e26-5f80ef712436.azurecomm.net"
+          $receiver = "martin.lee@nutrien.com"
+          $subject = "Welcome to Azure Communication Services Email"
+          $text = "test"
+          az communication email send --connection-string $connection --sender $sender --subject $subject --to $receiver --text "($text)"
+
+          
