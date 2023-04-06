@@ -26,6 +26,10 @@ jobs:
     name: Run PSScriptAnalyzer on Windows
     runs-on: windows-latest
     steps:
+      - name: Log in with Azure
+        uses: azure/login@v1
+        with:
+          Creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - uses: actions/checkout@v3
       - name: Install CLI
         shell: pwsh
@@ -46,7 +50,7 @@ jobs:
           $tenant = $env:TENANT_ID
           #$Credential = New-Object -ArgumentList $User,$PWord -TypeName "System.Management.Automation.PSCredential"
           #Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
-          az login --service-principal -u $User -p $PWord --tenant $tenant
+          #az login --service-principal -u $User -p $PWord --tenant $tenant
       - name: Send Email
         shell: pwsh
         run: |
