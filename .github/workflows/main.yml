@@ -32,13 +32,14 @@ jobs:
         run: |
           #Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi
           Write-Output "overall"
-      - name: install communication services module
+      - name: install required module
         shell: pwsh
         run: |
           az config set extension.use_dynamic_install=yes_without_prompt
           Install-Module Az.Communication
+          Import-Module Az.Communication
           Install-Module Az.ResourceGraph
-          #Import-Module Az.Communication
+          Import-Module Az.ResourceGraph
       - name: connect to SPN
         shell: pwsh
         run: |
