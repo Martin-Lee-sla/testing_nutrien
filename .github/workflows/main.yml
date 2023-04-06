@@ -44,7 +44,7 @@ jobs:
           $User = $env:CLIENT_ID
           $PWord = $env:CLIENT_SECRET
           $tenant = $env:TENANT_ID
-          $Credential = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User,$PWord
+          $Credential = New-Object -ArgumentList $User,$PWord -TypeName "System.Management.Automation.PSCredential"
           Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
       - name: Send Email
         shell: pwsh
