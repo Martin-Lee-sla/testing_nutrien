@@ -49,7 +49,7 @@ jobs:
           $tenant = $env:TENANT_ID
           $Credential = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User,$PWord
           Connect-AzAccount -Credential $Credential -Tenant $tenant -ServicePrincipal
-          az login --service-principal -u $User -p $PWord --tenant $tenant
+          #az login --service-principal -u $User -p $PWord --tenant $tenant
       - name: query
         shell: pwsh
         run: |
