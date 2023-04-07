@@ -99,6 +99,6 @@ jobs:
           $receiver = "martin.lee@nutrien.com"
           $subject = "Welcome to Azure Communication Services Email"
           $text = $combined
-          az communication email send --connection-string $connection --sender $sender --subject $subject --to $receiver --text "'$query_count_html + '"
+          az communication email send --connection-string $connection --sender $sender --subject $subject --to $receiver --html "'$query_count_html + $combined_html'"
 
           
