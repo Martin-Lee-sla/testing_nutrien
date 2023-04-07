@@ -90,6 +90,13 @@ jobs:
           #$combined
           $combined_html = $Live_Migration_Query + $Failure_Query | ConvertTo-Html -Fragment
           $combined_html
+          
+          $connection = "endpoint=https://daily-report-demo.communication.azure.com/;accesskey=04LvQxrsosgOWMarfxjDhBt1rHXRGvQ7zBifqMuxiKWOifQh/wuWMrY/G/qCTZd1eeISzhJfybOkYcr3ju//+Q=="
+          $sender = "DoNotReply@ad2873a6-3d24-45e2-8e26-5f80ef712436.azurecomm.net"
+          $receiver = "martin.lee@nutrien.com"
+          $subject = "Welcome to Azure Communication Services Email"
+          $text = $combined
+          az communication email send --connection-string $connection --sender $sender --subject $subject --to $receiver --html "'$query_count_html'"
 
       - name: Send Email
         shell: pwsh
