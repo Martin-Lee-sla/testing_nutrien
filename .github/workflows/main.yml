@@ -11,6 +11,7 @@ env:
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
   CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS  }}
+  CS_CONNECTION: ${{ secrets.CS_CONNECTION  }}
   
 jobs:
   Run-npm-on-Ubuntu:
@@ -91,7 +92,8 @@ jobs:
           $combined_html = $Live_Migration_Query + $Failure_Query | ConvertTo-Html -Fragment
           $combined_html
           
-          $connection = "endpoint=https://daily-report-demo.communication.azure.com/;accesskey=04LvQxrsosgOWMarfxjDhBt1rHXRGvQ7zBifqMuxiKWOifQh/wuWMrY/G/qCTZd1eeISzhJfybOkYcr3ju//+Q=="
+          #$connection = "endpoint=https://daily-report-demo.communication.azure.com/;accesskey=04LvQxrsosgOWMarfxjDhBt1rHXRGvQ7zBifqMuxiKWOifQh/wuWMrY/G/qCTZd1eeISzhJfybOkYcr3ju//+Q=="
+          $connection = ($env:CS_CONNECTION)
           $sender = "DoNotReply@ad2873a6-3d24-45e2-8e26-5f80ef712436.azurecomm.net"
           $receiver = "martin.lee@nutrien.com"
           $subject = "Welcome to Azure Communication Services Email"
