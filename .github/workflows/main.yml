@@ -58,7 +58,9 @@ jobs:
           | summarize count() by tostring(properties.reason)'
           $query_count = (Search-AzGraph -Query $kqreboot)
           $query_count
-
+          $query_count_html = $query_count | ConvertTo-Html -Fragment
+          $query_count_html
+          
           $test = 'HealthResources
                  | where type == "microsoft.resourcehealth/resourceannotations"
                  | project SubscriptionName=name, subscriptionId, resourceGroup, VmName=trim("\"]", substring(split(properties.targetResourceId, "/", 8),2)), properties.occurredTime, properties.annotationName, properties.category, properties.summary, properties.context, properties.reason'
@@ -66,14 +68,12 @@ jobs:
           $detailed = (Search-AzGraph -Query $test | Out-String)
           $detailed
 
-
           $Live_Migration = 'HealthResources
           | where type == "microsoft.resourcehealth/resourceannotations"
           | where  properties.reason == "Live Migration"
           | project SubscriptionName=name, subscriptionId, resourceGroup, VmName=trim("\"]", substring(split(properties.targetResourceId, "/", 8),2)), properties.occurredTime, properties.annotationName, properties.category, properties.summary, properties.context, properties.reason'
           $Live_Migration_Query = Search-AzGraph -Query $Live_Migration
           $Live_Migration_Query
-
 
           $Failure = 'HealthResources
           | where type == "microsoft.resourcehealth/resourceannotations"
@@ -86,8 +86,11 @@ jobs:
 
           $style = "<style>BODY{font:arial 10pt;}</style>"
 
-          $combined = (write-output $query_count + $Live_Migration_Query + $Failure_Query| ConvertTo-Html -Body $style | Out-String)# + (write-output $Live_Migration_Query | ConvertTo-Html -Body $style | Out-String) + (write-output $Failure_Query | ConvertTo-Html -Body $style | Out-String)
-          $combined
+          #$combined = (write-output $query_count + $Live_Migration_Query + $Failure_Query| ConvertTo-Html -Body $style | Out-String)# + (write-output $Live_Migration_Query | ConvertTo-Html -Body $style | Out-String) + (write-output $Failure_Query | ConvertTo-Html -Body $style | Out-String)
+          #$combined
+          $combined_html = $Live_Migration_Query + $Failure_Query | ConvertTo-Html -Fragment
+          $combined_html
+
       - name: Send Email
         shell: pwsh
         run: |
@@ -96,6 +99,6 @@ jobs:
           $receiver = "martin.lee@nutrien.com"
           $subject = "Welcome to Azure Communication Services Email"
           $text = $combined
-          az communication email send --connection-string $connection --sender $sender --subject $subject --to $receiver --text "'$text'"
+          az communication email send --connection-string $connection --sender $sender --subject $subject --to $receiver --text "'$query_count_html + '"
 
           
