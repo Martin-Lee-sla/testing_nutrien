@@ -14,8 +14,8 @@ env:
   CS_CONNECTION: ${{ secrets.CS_CONNECTION  }}
   
 jobs:
-  Run-npm-on-Ubuntu:
-    name: Run npm on Ubuntu
+  Run-on-Ubuntu:
+    name: Run on Ubuntu Machine
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,7 +24,7 @@ jobs:
           node-version: '14'
       - run: npm help
 
-  Run-PSScriptAnalyzer-on-Windows:
+  Run-PSScript-on-Windows:
     name: Run PSScript on Windows
     runs-on: windows-latest
     steps:
