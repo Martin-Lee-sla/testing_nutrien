@@ -83,12 +83,8 @@ jobs:
           $Failure_Query = Search-AzGraph -Query $Failure
           $Failure_Query
 
-          $detailed = $Failure_Query + $Live_Migration_Query
-
           $style = "<style>BODY{font:arial 10pt;}</style>"
 
-          #$combined = (write-output $query_count + $Live_Migration_Query + $Failure_Query| ConvertTo-Html -Body $style | Out-String)# + (write-output $Live_Migration_Query | ConvertTo-Html -Body $style | Out-String) + (write-output $Failure_Query | ConvertTo-Html -Body $style | Out-String)
-          #$combined
           $combined_html = $Live_Migration_Query + $Failure_Query + $detailed | ConvertTo-Html -Fragment
           $combined_html
           
