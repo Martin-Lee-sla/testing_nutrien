@@ -89,7 +89,7 @@ jobs:
 
           #$combined = (write-output $query_count + $Live_Migration_Query + $Failure_Query| ConvertTo-Html -Body $style | Out-String)# + (write-output $Live_Migration_Query | ConvertTo-Html -Body $style | Out-String) + (write-output $Failure_Query | ConvertTo-Html -Body $style | Out-String)
           #$combined
-          $combined_html = $Live_Migration_Query + $Failure_Query + detailed | ConvertTo-Html -Fragment
+          $combined_html = $Live_Migration_Query + $Failure_Query + $detailed | ConvertTo-Html -Fragment
           $combined_html
           
           #$connection = "endpoint=https://daily-report-demo.communication.azure.com/;accesskey=04LvQxrsosgOWMarfxjDhBt1rHXRGvQ7zBifqMuxiKWOifQh/wuWMrY/G/qCTZd1eeISzhJfybOkYcr3ju//+Q=="
