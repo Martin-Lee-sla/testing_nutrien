@@ -68,7 +68,6 @@ jobs:
           $detailed = (Search-AzGraph -Query $test | Out-String)
           $detailed
           $detailed_html = $detailed | ConvertTo-Html -Fragment
-          $detailed_html
 
           $Live_Migration = 'HealthResources
           | where type == "microsoft.resourcehealth/resourceannotations"
