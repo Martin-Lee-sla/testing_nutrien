@@ -65,7 +65,6 @@ jobs:
           $test = 'HealthResources
                  | where type == "microsoft.resourcehealth/resourceannotations"
                  | project SubscriptionName=name, subscriptionId, resourceGroup, VmName=trim("\"]", substring(split(properties.targetResourceId, "/", 8),2)), properties.occurredTime, properties.annotationName, properties.category, properties.summary, properties.context, properties.reason'
-
           $detailed = (Search-AzGraph -Query $test | Out-String)
           $detailed
           $detailed_html = $detailed | ConvertTo-Html -Fragment
